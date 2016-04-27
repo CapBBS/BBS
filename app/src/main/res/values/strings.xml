@@ -1,0 +1,10 @@
+
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Exp</string>
+    <string name="title_connecting">connecting...</string>
+    <string name="title_connected_to">connected to <xliff:g id="device_name">%1$s</xliff:g></string>
+    <string name="title_not_connected">not connected</string>
+    <string name="not_connected">You are not connected to a device</string>
+    <string name="send">Send</string>
+    <string name="datasend">Datasend</string>
+</resources>
