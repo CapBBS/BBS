@@ -360,6 +360,13 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
                 }
             }
 
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
             // Reset out string buffer to zero and clear the edit text field
             mOutStringBuffer.setLength(0);
             mOutEditText.setText(mOutStringBuffer);
