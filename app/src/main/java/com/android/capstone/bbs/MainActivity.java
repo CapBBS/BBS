@@ -63,6 +63,7 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
     String filePath = null;
     File myDir = null;
     File file = null;
+    FileOutputStream fos = null;
 
 
     private final Handler mHandler = new Handler() {
@@ -105,10 +106,10 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
                     byte[] rreadBuf = (byte[]) msg.obj;
 
                     try {
-                        file = new File(filePath + "/song.mp3");
-                        FileOutputStream fis = new FileOutputStream(file, true);
-                        fis.write(rreadBuf);
-                        fis.close();
+                        fos = new FileOutputStream(file, true);
+                        fos.write(rreadBuf);
+                        fos.flush();
+
                     } catch (IOException e) {}
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
@@ -135,8 +136,12 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         myDir = getExternalFilesDir("mydir");
         filePath = myDir.getAbsolutePath();
+
+        file = new File(filePath + "/song.mp3");
+
 
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (mNfcAdapter == null) {
@@ -300,7 +305,7 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
 
                 //send data file
                 try {
-                    file = new File(filePath + "/song.mp3");
+
                     InputStream inputStream = getResources().openRawResource(R.raw.song);
                     FileOutputStream outputStream = new FileOutputStream(file);
                     byte[] txt = new byte[inputStream.available()];
