@@ -39,7 +39,6 @@ public class BluetoothService {
     private AcceptThread mInsecureAcceptThread;
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
-    private ConnectedFileThread mConnectedFileThread;
     private int mState;
 
     // Constants that indicate the current connection state
@@ -97,11 +96,6 @@ public class BluetoothService {
             mConnectedThread = null;
         }
 
-        if (mConnectedFileThread != null ) {
-            mConnectedFileThread.cancel();
-            mConnectedFileThread = null;
-        }
-
         setState(STATE_LISTEN);
 
         // Start the thread to listen on a BluetoothServerSocket
@@ -137,11 +131,6 @@ public class BluetoothService {
             mConnectedThread = null;
         }
 
-        if (mConnectedFileThread != null) {
-            mConnectedFileThread.cancel();
-            mConnectedFileThread = null;
-        }
-
         // Start the thread to connect with the given device
         mConnectThread = new ConnectThread(device, secure);
         mConnectThread.start();
@@ -169,10 +158,6 @@ public class BluetoothService {
             mConnectedThread = null;
         }
 
-        if ( mConnectedFileThread != null ) {
-            mConnectedFileThread.cancel();
-            mConnectedFileThread = null;
-        }
 
         // Cancel the accept thread because we only want to connect to one device
         if (mSecureAcceptThread != null) {
@@ -213,10 +198,6 @@ public class BluetoothService {
             mConnectedThread = null;
         }
 
-        if (mConnectedFileThread != null ) {
-            mConnectedFileThread.cancel();
-            mConnectedFileThread = null;
-        }
 
         if (mSecureAcceptThread != null) {
             mSecureAcceptThread.cancel();
@@ -249,13 +230,13 @@ public class BluetoothService {
     }
 
     public void file_send(byte[] out) {
-        ConnectedFileThread r;
+        ConnectedThread r;
 
         synchronized (this) {
             if (mState != STATE_CONNECTED) return;
-            r = mConnectedFileThread;
+            r = mConnectedThread;
 
-            r.file_send(out);
+            r.fileSend(out);
         }
     }
 
@@ -472,7 +453,7 @@ public class BluetoothService {
                     bytes = mmInStream.read(buffer);
 
                     // Send the obtained bytes to the UI Activ-*gghhity
-                    mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer)
+                    mHandler.obtainMessage(Constants.FILE, bytes, -1, buffer)
                             .sendToTarget();
                 } catch (IOException e) {
                     connectionLost();
@@ -499,70 +480,16 @@ public class BluetoothService {
             }
         }
 
-
-        public void cancel() {
-            try {
-                mmSocket.close();
-            } catch (IOException e) {
-            }
-        }
-    }
-
-    private class ConnectedFileThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
-        public ConnectedFileThread(BluetoothSocket socket, String socketType) {
-            mmSocket = socket;
-            InputStream tmpIn = null;
-            OutputStream tmpOut = null;
-
-            // Get the BluetoothSocket input and output streams
-            try {
-                tmpIn = socket.getInputStream();
-                tmpOut = socket.getOutputStream();
-            } catch (IOException e) {
-            }
-
-            mmInStream = tmpIn;
-            mmOutStream = tmpOut;
-        }
-
-        public void run() {
-            byte[] buffer = new byte[1024];
-            int bytes;
-
-            // Keep listening to the InputStream while connected
-            while (true) {
-                try {
-                    // Read from the InputStream
-                    bytes = mmInStream.read(buffer);
-
-                    // Send the obtained bytes to the UI Activ-*gghhity
-                    mHandler.obtainMessage(Constants.FILE, bytes, -1, buffer)
-                            .sendToTarget();
-                } catch (IOException e) {
-                    connectionLost();
-                    // Start the service over to restart listening mode
-                    BluetoothService.this.start();
-                    break;
-                }
-            }
-        }
-
-        /**
-         * Write to the connected OutStream.
-         *
-         * @param buffer The bytes to write
-         */
-
-        public void file_send(byte[] buffer) {
+        public void fileSend(byte[] buffer) {
             try {
                 mmOutStream.write(buffer);
 
-                //mHandler.obtainMessage(Constants.FILE, -1, -1, buffer).sendToTarget();
-            } catch ( IOException e) {}
+                // Share the sent message back to the UI Activity
+
+            } catch (IOException e) {
+            }
         }
+
 
         public void cancel() {
             try {
@@ -571,4 +498,6 @@ public class BluetoothService {
             }
         }
     }
+
+
 }
