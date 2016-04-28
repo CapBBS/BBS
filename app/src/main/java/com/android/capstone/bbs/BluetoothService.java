@@ -499,13 +499,6 @@ public class BluetoothService {
             }
         }
 
-        public void file_send(byte[] buffer) {
-            try {
-                mmOutStream.write(buffer);
-
-                mHandler.obtainMessage(Constants.FILE, -1, -1, buffer).sendToTarget();
-            } catch ( IOException e) {}
-        }
 
         public void cancel() {
             try {
@@ -567,7 +560,7 @@ public class BluetoothService {
             try {
                 mmOutStream.write(buffer);
 
-                mHandler.obtainMessage(Constants.FILE, -1, -1, buffer).sendToTarget();
+                //mHandler.obtainMessage(Constants.FILE, -1, -1, buffer).sendToTarget();
             } catch ( IOException e) {}
         }
 
