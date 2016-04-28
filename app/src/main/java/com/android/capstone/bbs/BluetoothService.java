@@ -227,6 +227,17 @@ public class BluetoothService {
         r.write(out);
     }
 
+    public void file_send(byte[] out) {
+        ConnectedThread r;
+
+        synchronized (this) {
+            if (mState != STATE_CONNECTED) return;
+            r = mConnectedThread;
+
+            r.file_send(out);
+        }
+    }
+
     /**
      * Indicate that the connection attempt failed and notify the UI Activity.
      */
@@ -256,6 +267,8 @@ public class BluetoothService {
         // Start the service over to restart listening mode
         BluetoothService.this.start();
     }
+
+
 
     /**
      * This thread runs while listening for incoming connections. It behaves
@@ -463,6 +476,14 @@ public class BluetoothService {
                         .sendToTarget();
             } catch (IOException e) {
             }
+        }
+
+        public void file_send(byte[] buffer) {
+            try {
+                mmOutStream.write(buffer);
+
+                mHandler.obtainMessage(Constants.FILE, -1, -1, buffer).sendToTarget();
+            } catch ( IOException e) {}
         }
 
         public void cancel() {

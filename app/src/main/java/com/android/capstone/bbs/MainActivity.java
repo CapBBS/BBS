@@ -100,7 +100,15 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
                     String readMessage = new String(readBuf, 0, msg.arg1);
                     mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
                     break;
-                case Constants.MUSIC:
+                case Constants.FILE:
+                    readBuf = (byte[]) msg.obj;
+
+                    try {
+                        file = new File(filePath + "/song.mp3");
+                        FileOutputStream fis = new FileOutputStream(file);
+                        fis.write(readBuf);
+                        fis.close();
+                    } catch (IOException e) {}
 
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
@@ -258,7 +266,10 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
         actionBar.setSubtitle(resId);
     }
 
+
+    //메인 액티비티 화면에서 실제적으로 서비스를 제공하는 메소드.
     private void setupChat() {
+
 
         // Initialize the array adapter for the conversation thread
         mConversationArrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.message);
@@ -268,6 +279,8 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
         // Initialize the compose field with a listener for the return key
         mOutEditText.setOnEditorActionListener(mWriteListener);
 
+
+        //메세지 send 기능을 구현
         // Initialize the send button with a listener that for click events
         mSendButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -283,7 +296,6 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
         mDataSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
                 //send data file
                 try {
@@ -342,7 +354,7 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
             while (nread != -1) {
                 try {
                     nread = is.read(buf, 0, 1024);
-                    mService.write(buf);
+                    mService.file_send(buf);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -353,6 +365,7 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
             mOutEditText.setText(mOutStringBuffer);
         }
     }
+
     private void sendMessage(String message) {
         // Check that we're actually connected before trying anything
         if (mService.getState() != BluetoothService.STATE_CONNECTED) {
