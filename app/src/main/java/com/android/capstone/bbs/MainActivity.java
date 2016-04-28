@@ -106,9 +106,11 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
                     byte[] rreadBuf = (byte[]) msg.obj;
 
                     try {
+
+                        file = new File(filePath + "/song.mp3");
                         fos = new FileOutputStream(file, true);
                         fos.write(rreadBuf);
-                        fos.flush();
+                        fos.close();
 
                     } catch (IOException e) {}
                     break;
@@ -140,7 +142,7 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
         myDir = getExternalFilesDir("mydir");
         filePath = myDir.getAbsolutePath();
 
-        file = new File(filePath + "/song.mp3");
+
 
 
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
