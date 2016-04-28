@@ -107,7 +107,7 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
 
                     try {
 
-                        file = new File(filePath + "/th.doc");
+                        file = new File(filePath + "/hi.txt");
                         fos = new FileOutputStream(file, true);
                         fos.write(rreadBuf);
                         fos.close();
@@ -308,7 +308,7 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
                 //send data file
                 try {
 
-                    InputStream inputStream = getResources().openRawResource(R.raw.th);
+                    InputStream inputStream = getResources().openRawResource(R.raw.hi);
                     FileOutputStream outputStream = new FileOutputStream(file);
                     byte[] txt = new byte[inputStream.available()];
                     inputStream.read(txt);
