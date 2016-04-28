@@ -24,6 +24,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.simonguest.btxfr.ClientThread;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -40,6 +42,7 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
     NfcAdapter mNfcAdapter;
     private static final int NFC_MESSAGE_SENT = -1;
     private String other_device_macaddr = "";
+    
 
     //Bluetooth Field
     private static final int REQUEST_ENABLE_BT = 3;
