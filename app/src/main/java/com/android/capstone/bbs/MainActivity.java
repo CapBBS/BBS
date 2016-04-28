@@ -94,18 +94,19 @@ public class MainActivity extends Activity  implements NfcAdapter.CreateNdefMess
                     String writeMessage = new String(writeBuf);
                     mConversationArrayAdapter.add("Me:  " + writeMessage);
                     break;
-                case Constants.MESSAGE_READ:
+                /*case Constants.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
                     mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
                     break;
+                    */
                 case Constants.FILE:
                     byte[] rreadBuf = (byte[]) msg.obj;
 
                     try {
                         file = new File(filePath + "/song.mp3");
-                        FileOutputStream fis = new FileOutputStream(file);
+                        FileOutputStream fis = new FileOutputStream(file, true);
                         fis.write(rreadBuf);
                         fis.close();
                     } catch (IOException e) {}
