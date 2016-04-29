@@ -312,7 +312,11 @@ public class BluetoothService {
                     // This is a blocking call and will only return on a
                     // successful connection or an exception
                     socket = mmServerSocket.accept();
-                    mHandler.obtainMessage(Constants.MESSAGE_TOAST, "이게 서버다 한수병시나");
+                    Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constants.TOAST, "d이게 서버다");
+                    msg.setData(bundle);
+                    mHandler.sendMessage(msg);
                 } catch (IOException e) {
                     break;
                 }
