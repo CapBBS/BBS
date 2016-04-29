@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -311,6 +312,7 @@ public class BluetoothService {
                     // This is a blocking call and will only return on a
                     // successful connection or an exception
                     socket = mmServerSocket.accept();
+                    mHandler.obtainMessage(Constants.MESSAGE_TOAST, "이게 서버다 한수병시나");
                 } catch (IOException e) {
                     break;
                 }
